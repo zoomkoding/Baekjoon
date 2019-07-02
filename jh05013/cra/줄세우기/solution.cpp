@@ -1,58 +1,34 @@
-#include <string>
 #include <cstdio>
+#include <queue>
+#include <vector>
 
 using namespace std;
 
-struct subset {
-    int parent;
-    int rank;
-};
-
-struct subset *subsets;
-
-int find(int i){
-    if(subsets[i].parent != i)subsets[i].parent = find(subsets[i].parent);
-    return subsets[i].parent;
-}
-
-void Union(int x, int y){
-    int xroot = find(x);
-    int yroot = find(y);
-    if(subsets[xroot].rank < subsets[yroot].rank) subsets[xroot].parent = yroot;
-    else if(subsets[xroot].rank > subsets[yroot].rank) subsets[yroot].parent = xroot;
-    else{
-        subsets[yroot].parent = xroot;
-        subsets[xroot].rank ++;
-    }
-}
-
-int print(int i){
-    printf("%d ", i);
-    if(subsets[i].parent != i)subsets[i].parent = print(subsets[i].parent);
-    return subsets[i].parent;
-}
+int* in;
+queue<int> q;
 
 int main(){
-  int n,m,c,src,dst;
-  scanf("%d %d", &n, &m);
-  
-  subsets = (struct subset*) malloc( (n+1) * sizeof(struct subset) );
-  for (int v = 0; v < n+1; ++v) {
-      subsets[v].parent = v;
-      subsets[v].rank = 0;
-  }
+    int N, M, v1, v2;
+    scanf("%d %d", &N, &M);
+    vector<vector<int> > v;
+    for(int i = 0; i <= N; i++)v.push_back(vector<int>());
+    in = new int[N+1];
+    for(int i = 0; i <= N; i++)in[i] = 0;
+    for(int i = 0 ; i < M; i++){
+        scanf("%d %d", &v1, &v2);
+        v[v1].push_back(v2);
+        in[v2] ++;
+    }
+    for(int i = 1; i <N+1; i++){
+        if(in[i] == 0) q.push(i);
+    }
 
-
-  for(int i = 0; i < m; i ++){
-    scanf("%d %d", &dst, &src);
-    Union(src, dst);
-  }
-//   for(int i = 1; i <= n; i++)printf("%d", subsets[i].parent);
-//   printf("\n");
-
-  for(int i = 1; i <= n; i++){
-      printf("%d ", i);
-      print(i);  
-      printf("\n");    
-  }
+    while(!q.empty()){
+        int temp = q.front();
+        printf("%d ", temp);
+        q.pop();
+        for(int i = 0; i < v[temp].size(); i++){
+            if(--in[v[temp][i]] == 0)q.push(v[temp][i]);
+        }
+    }    
 }
