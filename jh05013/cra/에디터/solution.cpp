@@ -39,7 +39,6 @@ struct DLinkedList {
     }
     void endInsert(char c) { //tail 앞에 추가한다.
         new Node(c, tail->prev);
-        
     }
     void moveRight(){
       if (tail -> data == ' ') return;
