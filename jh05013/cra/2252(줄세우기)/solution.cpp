@@ -10,7 +10,7 @@ queue<int> q;
 int main(){
     int N, M, v1, v2;
     scanf("%d %d", &N, &M);
-    vector<vector<int> > v;
+    vector< vector<int> > v;
     for(int i = 0; i <= N; i++)v.push_back(vector<int>());
     in = new int[N+1];
     for(int i = 0; i <= N; i++)in[i] = 0;
