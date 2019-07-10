@@ -37,7 +37,7 @@ int main(){
         }
     }
     for(int i = 1; i <= n; i++){
-        if(v[i].size() == 1) dfs(i, 0, 0);
+        if(v[i].size() == 1)dfs(i, 0, 0);
     }
     printf("%d", max_d);
     
