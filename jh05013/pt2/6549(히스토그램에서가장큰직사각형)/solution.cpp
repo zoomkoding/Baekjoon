@@ -19,13 +19,23 @@ int find_min(vector<int> &a, vector<int> &tree, int node, int start, int end, in
 
 long long div_and_conq(int left, int right, vector<int> &v, vector<int> &tree){
     int min = find_min(v, tree, 1, 0, v.size()-1, left, right);
-    int box = v[min]*(right-left+1);
-    if(box > answer) answer = box;
-    if(left <= min - 1) div_and_conq(left, min -1, v, tree);
-    if(min + 1 <= right) div_and_conq(min + 1, right, v, tree);
-    
-    
+    long long box = (long long)v[min]*(long long)(right-left+1);
+    if(left <= min - 1){
+        long long temp = div_and_conq(left, min -1, v, tree);
+        if(box < temp) box = temp;
+        
+    }
+    if(min + 1 <= right) {
+        long long temp = div_and_conq(min + 1, right, v, tree);
+        if(box < temp) box = temp;
+    }
+    return box;
 }
+
+// a: 배열 a
+// tree: 세그먼트 트리
+// node: 세그먼트 트리 노드 번호
+// node가 담당하는 합의 범위가 start ~ end
 
 void init(vector<int> &a, vector<int> &tree, int node, int start, int end){
     if(start == end) tree[node] = start;
@@ -49,7 +59,6 @@ int main(){
 
         for(int i = 0; i < n; i++)scanf("%d", &v[i]);
         init(v, tree, 1, 0, n-1);
-        div_and_conq(0, n-1, v, tree);
-        printf("%d\n", answer);
+        printf("%lld\n", div_and_conq(0, n-1, v, tree));
     }
 }
