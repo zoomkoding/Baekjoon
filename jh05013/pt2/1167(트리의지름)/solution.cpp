@@ -3,7 +3,6 @@
 #include <queue>
 #include <vector>
 #include <cstdio>
-#include <math.h>
 
 using namespace std;
 
