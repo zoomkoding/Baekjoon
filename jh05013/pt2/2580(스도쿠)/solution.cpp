@@ -1,7 +1,36 @@
 #include <cstdio>
 
+char buf[1 << 17];
+
+inline char read() {
+	static int idx = 1 << 17;
+	if (idx == 1 << 17) {
+		fread(buf, 1, 1 << 17, stdin);
+		idx = 0;
+	}
+	return buf[idx++];
+}
+
+inline int readInt() {
+	int sum = 0;
+	bool flg = 1;
+	char now = read();
+
+	while (now == 10 || now == 32) now = read();
+	if (now == '-') flg = 0, now = read();
+	while (now >= 48 && now <= 57) {
+		sum = sum * 10 + now - 48;
+		now = read();
+	}
+
+	return flg ? sum : -sum;
+}
+
 typedef struct Point{
     int x, y;
+    Point(){
+
+    }
     Point(int i, int j){
         x = i;
         y = j;
@@ -35,7 +64,7 @@ int backtrack(int c){
 int main(){
     for(int i = 0; i < 9; i ++){
         for(int j = 0; j < 9; j++){
-            scanf("%d", &sudoku[i][j]);
+            sudoku[i][j] = readInt();
             if(!sudoku[i][j]) v[n++] = Point(i, j);      
         }
     }

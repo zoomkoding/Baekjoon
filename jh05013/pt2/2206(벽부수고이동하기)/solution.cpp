@@ -1,5 +1,4 @@
 #include <cstdio>
-#include <vector>
 #include <queue>
 #include <algorithm>
 
@@ -13,42 +12,46 @@ typedef struct Point{
     }
 }Point;
 
-vector<Point> p;
-queue<Point > q;
 int d[4][2] = { {1,0}, {-1,0}, {0,1}, {0,-1} };
-
-int bfs(vector<vector<int> > v){
+int n, m, answer = 10000000;
+int bfs(int l[][1010]){
+    int v[1010][1010] = {0};
+    for(int i = 0; i < n + 2; i++){
+        for(int j = 0; j < m + 2; j++)v[i][j] = l[i][j];
+    }
+    queue<Point> q;
     q.push(Point(1, 1));
     while(!q.empty()){
         Point temp = q.front(); q.pop();
+        int t = v[temp.x][temp.y];
+        if(temp.x == n && temp.y == m){
+            if(t < answer)answer = t;
+            return 1;
+        }
         for(int i = 0; i < 4; i++){
-            int t = v[temp.x][temp.y];
             int X = temp.x + d[i][0], Y = temp.y + d[i][1];
             if(v[X][Y] == 1){
-                if(X == 1 && Y == 1)continue;
+                if(X == 1 && Y == 1)continue; 
                 v[X][Y] = t + 1;
                 q.push(Point(X, Y));
             }
         }
     }
+    return 1;
 }
 
 int main(){
-    int n, m;
     scanf("%d %d ", &n, &m);
-    vector<vector<int> > v;
-    v = vector<vector<int> >(n + 2);
+    int v[1010][1010] = {0,};
     for(int i = 0; i < n + 2; i++){
-        v[i] = vector<int>(m + 2);
         if(i == 0 || i == n + 1) continue;
         for(int j = 1; j < m + 1; j++){
             char temp;
             scanf("%c", &temp);
-            v[i][j]= '1' - temp;
-            if(v[i][j]) p.push_back(Point(i, j));
+            v[i][j] = '1' - temp;
         }
         getchar();
-    }    
-    bfs(v);
-    printf("%d", v[n][m]);
+    }
+    
+    printf("%d", answer == 10000000 ? -1 : answer);
 }

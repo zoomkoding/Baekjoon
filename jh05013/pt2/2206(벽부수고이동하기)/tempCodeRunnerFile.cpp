@@ -1,1 +1,4 @@
-if(i == 0 || i == n + 1) continue;
+for(int  j = 0; j < n + 2; j ++){
+                        for(int k = 0; k < m + 2; k ++)printf("%d ", v[j][k]);
+                        printf("\n");
+                    }
