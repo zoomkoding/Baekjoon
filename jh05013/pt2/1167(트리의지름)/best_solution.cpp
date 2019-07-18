@@ -1,11 +1,25 @@
-#include <cstdio>
-#include <vector>
+#include <string>
+#include <algorithm>
 #include <queue>
-#define X first
-#define Y second
+#include <vector>
+#include <cstdio>
+#define INF 1000000000
+
 using namespace std;
 
-using pii = pair<int, int>;
+typedef struct Point{
+    int v, w;
+    Point(){}
+    Point(int i, int j){
+        v = i;
+        w = j;
+    }
+}Point;
+
+queue<int> q;
+vector< vector< Point > > ll;
+int n, v, w, u;
+
 char buf[1 << 17];
 
 inline char read() {
@@ -30,50 +44,41 @@ inline int readInt() {
 
 	return flg ? sum : -sum;
 }
-vector<pii> vec[100000];
 
-pii farNodeDist(int x) {
-	bool hst[100000]{};
-	queue<pii> q;
-	q.push({ x, 0 });
-	hst[x] = 1;
-
-	int farNode = -1, farDist = -1;
-	while (!q.empty()) {
-		int now = q.front().X;
-		int d = q.front().Y;
-		q.pop();
-
-		for (pii &next : vec[now]) {
-			if (hst[next.X]) continue;
-			hst[next.X] = 1;
-			
-			if (farDist < next.Y + d) {
-				farDist = next.Y + d;
-				farNode = next.X;
-			}
-			q.push({ next.X, next.Y + d });
-		}
-	}
-
-	return { farNode, farDist };
+Point find_d(int root){
+    int max_i = 1;
+    vector<int> d(n+1, INF);
+    queue<int> q;
+    d[root] = 0; 
+    q.push(root);
+    while(!q.empty()){
+        u = q.front(); q.pop();
+        for(int i = 0; i < ll[u].size(); i++){
+            v = ll[u][i].v, w = ll[u][i].w;
+            if(d[v] != INF)continue;
+            d[v] = d[u] + w;
+            q.push(v);
+        }
+    }
+    for(int i = 1; i < d.size(); i++){
+        if(d[max_i] < d[i])max_i = i;
+    }
+    return Point(max_i, d[max_i]);
 }
-int main() {
-	int v = readInt();
 
-	while (v--) {
-		int n, u, d;
-		n = readInt() - 1;
 
-		while (true) {
-			u = readInt();
-			if (u == -1) break;
-			d = readInt();
-			vec[n].push_back({ --u, d });
-		}
-	}
-
-	printf("%d", farNodeDist(farNodeDist(0).X).Y);
-
-	return 0;
+int main(){
+    n = readInt();
+    ll = vector< vector< Point > >(n+1);
+    for(int i = 0; i < n; i++){
+        int n1, n2, w;
+        n1 = readInt();
+        while(1){
+            n2 = readInt();
+            if(n2 == -1) break;
+            w = readInt();
+            ll[n1].push_back(Point(n2,w));
+        }
+    }
+    printf("%d", find_d(find_d(1).v).w);
 }

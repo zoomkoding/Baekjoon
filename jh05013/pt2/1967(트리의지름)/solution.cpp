@@ -18,6 +18,7 @@ queue<int> q;
 vector< vector< Point > > ll;
 int n, v, w, u;
 
+
 char buf[1 << 17];
 
 inline char read() {
@@ -68,15 +69,10 @@ Point find_d(int root){
 int main(){
     n = readInt();
     ll = vector< vector< Point > >(n+1);
-    for(int i = 0; i < n; i++){
-        int n1, n2, w;
-        n1 = readInt();
-        while(1){
-            n2 = readInt();
-            if(n2 == -1) break;
-            w = readInt();
-            ll[n1].push_back(Point(n2,w));
-        }
+    for(int i = 1; i < n; i++){
+        v = readInt(), u = readInt(), w = readInt();
+        ll[v].push_back(Point(u,w));
+        ll[u].push_back(Point(v,w));
     }
     printf("%d", find_d(find_d(1).v).w);
 }
