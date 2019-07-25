@@ -4,7 +4,7 @@
 
 using namespace std;
 
-char in[20000000];
+char in[2000000];
 const char* o;
 
 void getIn() {
@@ -19,35 +19,28 @@ int nextInt() {
     return ret;
 }
 
-int answer;
-
-int binarySearch(vector<int> &v, int l, int r, int c, int n){
-    int t, p, mid;
-    if(r >= l){
+int main(){
+    getIn();
+    int n, c, r, l, answer, mid, p, t, i;
+    n = nextInt(), c = nextInt();
+    vector<int>v(n);
+    for(int i = 0; i < n; i++) v[i] = nextInt();
+    sort(v.begin(), v.end());
+    l = 1, r = v[n - 1] - v[0];
+    while(r >= l){
         mid = (l + r) / 2;
         p = 0, t = 1;
-        for(int i = 1; i < n; i++){
+        for(i = 1; i < n; i++){
             if(v[i] - v[p] >= mid){
                 t ++;
                 p = i;
             }
         }
-        if(t >= c) {
+        if(t >= c){            
             answer = mid;
-            return binarySearch(v, mid + 1, r, c, n);
-        }
-        else return binarySearch(v, l, mid - 1, c, n);  
+            l = mid + 1;
+        } 
+        else r = mid - 1;  
     }
-    return -1;
-}
-
-int main(){
-    getIn();
-    int n, c;
-    n = nextInt(), c = nextInt();
-    vector<int> v(n);
-    for(int i = 0; i < n; i++) v[i] = nextInt();
-    sort(v.begin(), v.end());
-    binarySearch(v, 1, v[n-1]-v[0], c, n);
     printf("%d", answer);
 }
