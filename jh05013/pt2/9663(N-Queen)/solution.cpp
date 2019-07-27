@@ -1,49 +1,31 @@
 #include <cstdio>
-int n, cnt, arr[14][14];
-int d[4][2] = { {1, -1}, {1, 1}, {-1, 1}, {-1, -1} };
+#include <cmath>
 
-void find(int x, int y, int q){
-    printf("%d\n", q);
+int n, cnt, board[15];
+
+void find(int x, int q){
     if(q == n){
         cnt ++;
         return;
     }
-    for(int i = x; i < n; i++){
-        for(int j = y; j < n; j++){
-            if(arr[i][j] == 0){
-                for(int k = 0; k < n; k++){
-                    arr[i][k] ++;
-                    arr[k][j] ++;
-                }
-                for(int p = 0; p < 4; p++){
-                    int t = 1;
-                    while(1){
-                        if(i + d[p][0]*t >= n || j + d[p][1]*t >= n || i + d[p][0]*t < 0 || j + d[p][1]*t < 0) break;
-                        arr[i + d[p][0]*t][j + d[p][1]*t] ++;
-                        t ++;
-                    }
-                }
-                find(i, j, q+1);
-                for(int k = 0; k < n; k++){
-                    arr[i][k] --;
-                    arr[k][j] --;
-                }
-                for(int p = 0; p < 4; p++){
-                    int t = 1;
-                    while(1){
-                        if(i + d[p][0]*t >= n || j + d[p][1]*t >= n || i + d[p][0]*t < 0 || j + d[p][1]*t < 0) break;
-                        arr[i + d[p][0]*t][j + d[p][1]*t] --;
-                        t ++;
-                    }
-                }
-            }
+    
+    for(int i = 1; i < n + 1; i++){
+        bool isvalid = 1;
+        for(int k = 1; k < x; k++){
+            if(board[k] == i || (abs(x - k) == abs(i - board[k]))) isvalid = 0;
+        }
+        if(isvalid) {
+            board[x] = i; 
+            find(x + 1, q + 1);
+            board[x] = 0;
         }
     }
+    
 }
 
 int main(){
     scanf("%d", &n);
-    find(0, 0, 0);
+    find(1, 0);
     printf("%d", cnt);
 }
 
