@@ -10,9 +10,9 @@ void find(int x, int q){
     }
     
     for(int i = 1; i < n + 1; i++){
-        bool isvalid = 1;
+        int isvalid = 1;
         for(int k = 1; k < x; k++){
-            if(board[k] == i || (abs(x - k) == abs(i - board[k]))) isvalid = 0;
+            if(board[k] == i || abs(x - k) == abs(i - board[k])) isvalid = 0;
         }
         if(isvalid) {
             board[x] = i; 
