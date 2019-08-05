@@ -1,73 +1,79 @@
+//??? ?? ???? ??????!
+//zoomkoding.github.io/codingtest/2019/08/05/baekjoon-10217.html
+
 #include <cstdio>
 #include <vector>
 #include <queue>
-#define INF 1000000000
-
+#define pii pair<int, int>
+#define pip pair<int, pii>
+#define X first
+#define Y second
+#define D Y.X
+#define C Y.Y
+#define INF 10000000
 using namespace std;
 
-int t, n, m, k, u, v, c, d; 
 
-typedef struct Point{
-    int v, d, c, visited;
-    Point(){}
-    Point(int i, int j, int k){
-        v = i;
-        c = j;
-        d = k;
-        visited = 0;
-    }
-    Point(int i, int j){
-        c = i;
-        d = j;
-    }
-}Point;
+char buf[1 << 17];
 
-void find_short(vector< vector<Point> > &ll, vector<int> &in, int n, int m){
-    int min_d = INF;
-    queue<int> q;
-    vector< vector<Point> > v(n+1);
-    v[1].push_back(Point(0, 0));
-    q.push(1);
-    while(!q.empty()){
-        int front = q.front(); q.pop();
-        printf("front는 %d\n", front);
-        for(int i  = 1; i < n+1; i++){
-            printf("%d, ", in[i]);
-        }
-        printf("\n");
-        if(front == n)break;
-        for(int i = 0; i < ll[front].size(); i++){
-            if(ll[front][i].visited) continue;
-            Point edge = ll[front][i];
-            for(int j = 0; j < v[front].size(); j++){
-                Point node = v[front][j];
-                if(node.c + edge.c <= m) v[edge.v].push_back(Point(node.c + edge.c, node.d + edge.d));
-            }
-            ll[front][i].visited = 1;
-            in[edge.v]--;
-            if(!in[edge.v])q.push(edge.v);
-        } 
-    }
-    for(int i = 0; i < v[n].size(); i++){
-        printf("%d ", v[n][i].d);
-        if(v[n][i].d < min_d)min_d = v[n][i].d;
-    }
-    if(min_d != INF)printf("%d\n", min_d);
-    else printf("Poor KCM\n");
+inline char read() {
+	static int idx = 1 << 17;
+	if (idx == 1 << 17) {
+		fread(buf, 1, 1 << 17, stdin);
+		idx = 0;
+	}
+	return buf[idx++];
+}
+inline int readInt() {
+	int sum = 0;
+	bool flg = 1;
+	char now = read();
+
+	while (now == 10 || now == 32) now = read();
+	if (now == '-') flg = 0, now = read();
+	while (now >= 48 && now <= 57) {
+		sum = sum * 10 + now - 48;
+		now = read();
+	}
+
+	return flg ? sum : -sum;
 }
 
+int t, n, m, k, u, v, d, c, ans;
 
 int main(){
-    scanf("%d", &t);
-    for(int i = 0; i < t; i++){
-        scanf("%d %d %d", &n, &m, &k);
-        vector< vector<Point> > ll(n+1);
-        vector<int> in(n+1, 0);
-        for(int j = 0; j < k; j++){
-            scanf("%d %d %d %d", &u, &v, &c, &d);
-            ll[u].push_back(Point(v, c, d));
-            in[v]++;
+    t = readInt();
+    while(t--){
+        ans = INF;
+        n = readInt(), m = readInt(), k = readInt();
+        vector<vector<pip> >adj(n + 1);
+        vector<vector<int> > dist(101, vector<int>(10001, INF));
+        while(k--){
+            u =readInt(), v = readInt(), c = readInt(), d = readInt();
+            adj[u].push_back(pip(v, pii(d, c)));
         }
-        find_short(ll, in, n, m);
+        priority_queue<pii, vector<pii>, greater<pii> > pq;
+        dist[1][0] = 0;
+        pq.push(pii(0, 1));
+        while(!pq.empty()){
+            pii top = pq.top(); pq.pop();
+            int ti = top.Y, tc = top.X;
+            int td = dist[ti][tc];
+            if(ti == n){
+                ans = min(td, ans);
+                continue;
+            }
+            for(int i = 0; i < adj[ti].size(); i++){
+                int ni = adj[ti][i].X, nc = tc + adj[ti][i].C, nd = adj[ti][i].D + td;
+                if(nc > m || nd >= ans) continue;
+                if(dist[ni][nc] > nd){
+                    dist[ni][nc] = nd;
+                    pq.push(pii(nc, ni));
+                }
+            }
+        }
+        if(ans == INF) printf("Poor KCM\n");
+        else printf("%d\n", ans);
+            
     }
 }
