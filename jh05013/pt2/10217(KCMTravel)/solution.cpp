@@ -1,18 +1,19 @@
-//??? ?? ???? ??????!
+//풀이는 아래 블로그를 참고해주세요!
 //zoomkoding.github.io/codingtest/2019/08/05/baekjoon-10217.html
 
 #include <cstdio>
 #include <vector>
 #include <queue>
-#define pii pair<int, int>
-#define pip pair<int, pii>
-#define X first
-#define Y second
-#define D Y.X
-#define C Y.Y
 #define INF 10000000
 using namespace std;
 
+typedef struct info{
+    int x, d, c;
+}info;
+
+bool operator< (const info &a, const info &b) {
+    return a.d > b.d;
+}
 
 char buf[1 << 17];
 
@@ -46,34 +47,32 @@ int main(){
     while(t--){
         ans = INF;
         n = readInt(), m = readInt(), k = readInt();
-        vector<vector<pip> >adj(n + 1);
+        vector<vector<info> >adj(n + 1);
         vector<vector<int> > dist(101, vector<int>(10001, INF));
         while(k--){
             u =readInt(), v = readInt(), c = readInt(), d = readInt();
-            adj[u].push_back(pip(v, pii(d, c)));
+            adj[u].push_back({v, d, c});
         }
-        priority_queue<pii, vector<pii>, greater<pii> > pq;
+        priority_queue<info> pq;
         dist[1][0] = 0;
-        pq.push(pii(0, 1));
+        pq.push({1, 0, 0});
         while(!pq.empty()){
-            pii top = pq.top(); pq.pop();
-            int ti = top.Y, tc = top.X;
-            int td = dist[ti][tc];
+            info top = pq.top(); pq.pop();
+            int ti = top.x, tc = top.c, td = top.d;
             if(ti == n){
                 ans = min(td, ans);
                 continue;
             }
-            for(int i = 0; i < adj[ti].size(); i++){
-                int ni = adj[ti][i].X, nc = tc + adj[ti][i].C, nd = adj[ti][i].D + td;
+            for(info &t : adj[ti]){
+                int ni = t.x, nc = t.c + tc, nd = t.d + td;
                 if(nc > m || nd >= ans) continue;
                 if(dist[ni][nc] > nd){
                     dist[ni][nc] = nd;
-                    pq.push(pii(nc, ni));
+                    pq.push({ni, nd, nc});
                 }
             }
         }
         if(ans == INF) printf("Poor KCM\n");
-        else printf("%d\n", ans);
-            
+        else printf("%d\n", ans); 
     }
 }
