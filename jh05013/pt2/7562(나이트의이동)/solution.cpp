@@ -1,6 +1,31 @@
 #include <cstdio>
 #include <queue>
 
+char buf[1 << 17];
+
+inline char read() {
+	static int idx = 1 << 17;
+	if (idx == 1 << 17) {
+		fread(buf, 1, 1 << 17, stdin);
+		idx = 0;
+	}
+	return buf[idx++];
+}
+inline int readInt() {
+	int sum = 0;
+	bool flg = 1;
+	char now = read();
+
+	while (now == 10 || now == 32) now = read();
+	if (now == '-') flg = 0, now = read();
+	while (now >= 48 && now <= 57) {
+		sum = sum * 10 + now - 48;
+		now = read();
+	}
+
+	return flg ? sum : -sum;
+}
+
 typedef struct Point{
     int x, y;
     Point(int i, int j){
