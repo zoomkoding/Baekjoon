@@ -1,5 +1,5 @@
 #include <cstdio>
-int n, arr[1001], m[1001], cnt = 0, ans = 0;
+int n, arr[1000001], m[1000001], cnt = 0, ans = 0;
 int main(){
     scanf("%d", &n);
     for(int i = 0; i < n; i++){
