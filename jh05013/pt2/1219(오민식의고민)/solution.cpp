@@ -9,9 +9,9 @@ typedef struct edge{
 using namespace std;
 
 long long n, src, dest, m, u, v, c;
-long long inc[100];
-long long tot[100];
-edge e[100];
+long long inc[111];
+long long tot[111];
+edge e[111];
 
 int main(){
     scanf("%lld %lld %lld %lld", &n, &src, &dest, &m);
