@@ -2,15 +2,16 @@
 #include <cstring>
 using namespace std;
 char p[4001], t[4001];
-int pn, tn, dp[4001][4001];
-//p는 x에서의 길이 y는 
-int find(int x, int y){
-    if(x == pn)return 0;
-    if(y == tn)return find(x + 1, 0);
+int pn, tn, dp[4001][4001], ans;
+
+int find(int x, int y, int cnt){
+    if(x == pn || y == tn)return cnt;
     int &ret = dp[x][y];
-    if(ret != -1)return ret;
-    if(p[x] == t[y])ret = 1 + find(x + 1, y + 1);
-    
+    if(p[x] == t[y])return ret = max(max(find(x + 1, y + 1, cnt + 1), find(x + 1, y, 0)), find(x, y + 1, 0));
+    else {
+        ret = max(find(x + 1, y, 0), find(x, y + 1, 0));
+        return cnt;
+    }
 }
 
 int main(){
@@ -18,6 +19,15 @@ int main(){
     ios::sync_with_stdio(0);cin.tie(0);
     cin >> p >> t;
     pn = strlen(p), tn = strlen(t);
-    cout << find(0, 0);
-
+    find(0, 0, 0);
+    for(int i = 0; i < pn; i++){
+        for(int j = 0; j < tn; j++){
+            printf("%d", dp[i][j]);
+            if(dp[i][j] > ans)ans = dp[i][j];
+        }
+        printf("\n");
+    }
+    
+    cout << ans;
+    
 }
