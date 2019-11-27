@@ -1,19 +1,35 @@
 #include <cstdio>
 #include <algorithm>
+#include <queue>
 using namespace std;
-int n, temp, t, h, arr[10001], dp[3001][3001];
-void find(int x){
-    dp[0][x] = arr[x] * t;
-    
-}
+#define pii pair<int, int>
+#define pip pair<int, pii>
+
+int ans, cnt, n, t, h, arr[10001], visited[10001];
 
 int main(){
-    for(int i = 0; i < 3001; i++){
-        for(int j = 0; j < 3001; j++)dp[i][j] = 987654321;
-    }
     scanf("%d", &n);
-    for(int i = 0; i < n; i++)scanf("%d", &arr[i]);
+    for(int i = 1; i <= n; i++)scanf("%d", &arr[i]);
     scanf("%d %d", &t, &h);
-    sort(arr, arr + n);
-    
+    priority_queue<pip> pq;
+    for(int i = 1; i <= n; i++){
+        pq.push(pip(-h, pii(-1, i)));
+        pq.push(pip(-arr[i] * t, pii(0, i)));
+    }
+
+    while(!pq.empty() || cnt != n){
+        pip top = pq.top(); pq.pop();
+        int v = -top.first, from = top.second.first, cur = top.second.second;
+        if(visited[cur])continue;
+        printf("%d %d %d\n", v, from, cur);
+        ans += v, cnt++;
+        visited[cur] = 1;
+        if(from != -1)continue;
+        for(int i = 1; i <= n; i++){
+            if(visited[i])continue;
+            pq.push(pip(-abs(arr[cur] - arr[i]) * t, pii(cur, i)));
+        }
+    }
+
+    printf("%d", ans);
 }
